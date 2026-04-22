@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pondera Alliance — Tiered Wholesale Model</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1E2761;--navy2:#253580;--navy3:#1E3A5F;
+  --gold:#C9A84C;--white:#fff;--bg:#f9f8f6;
+  --surface:#fff;--surface2:#F1F4F9;--border:rgba(0,0,0,.09);
+  --text:#1a1a18;--text2:#5c5b57;--text3:#9b9a95;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --green:#1A6B3C;--green-light:#E8F5ED;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --red:#C0392B;--dgray:#334155;
+  --radius:10px;--radius-sm:6px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem;font-size:14px}
+.page{max-width:860px;margin:0 auto}
+
+.header{margin-bottom:1.75rem}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.logo{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.badge{font-size:10px;font-weight:600;padding:3px 11px;border-radius:999px;background:var(--surface2);color:var(--navy);border:0.5px solid var(--border)}
+h1{font-size:21px;font-weight:600;color:var(--navy)}
+h2{font-size:16px;font-weight:600;color:var(--navy);margin:2rem 0 0.75rem}
+.subtitle{font-size:12px;color:var(--text2);margin-top:4px;font-style:italic}
+.gold-rule{height:2px;background:var(--gold);margin:12px 0 0;border:none}
+.section-divider{height:1px;background:var(--border);margin:2.5rem 0 1.5rem}
+
+.slabel{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:9px}
+
+.ref-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1.25rem 0}
+.ref-card{background:var(--navy2);border-radius:var(--radius);padding:10px 14px}
+.ref-val{font-size:18px;font-weight:600;color:var(--white)}
+.ref-lbl{font-size:10px;color:#9BAFD4;margin-top:3px}
+
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.tier-card{background:var(--surface2);border-radius:var(--radius);border:0.5px solid var(--border);overflow:hidden}
+.tier-accent{height:4px}
+.t1 .tier-accent{background:var(--blue)}
+.t2 .tier-accent{background:var(--green)}
+.t3 .tier-accent{background:var(--amber)}
+.tier-body{padding:12px 14px}
+.tier-name{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.tier-vol{font-size:11px;color:var(--text2);margin-bottom:8px}
+.tier-price{font-size:32px;font-weight:700;line-height:1;margin-bottom:4px}
+.t1 .tier-price{color:var(--blue)}
+.t2 .tier-price{color:var(--green)}
+.t3 .tier-price{color:var(--amber)}
+.tier-price-lbl{font-size:11px;color:var(--text2);margin-bottom:10px}
+.tier-divider{height:1px;background:var(--border);margin:8px 0}
+.tier-stat{display:flex;justify-content:space-between;padding:3px 0;font-size:11px}
+.tier-stat-lbl{color:var(--text2)}
+.tier-stat-val{font-weight:600}
+.t1 .tier-stat-val.gm,.t2 .tier-stat-val.gm{color:var(--green)}
+.t3 .tier-stat-val.gm{color:var(--amber)}
+.t1 .tier-stat-val.gp,.t2 .tier-stat-val.gp{color:var(--green)}
+.t3 .tier-stat-val.gp{color:var(--amber)}
+
+.term-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.term-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.term-accent{height:4px;background:var(--navy)}
+.term-body{padding:12px 14px}
+.term-label{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.term-val{font-size:22px;font-weight:700;color:var(--navy);line-height:1.1}
+.term-val.sm{font-size:17px}
+.term-sub{font-size:11px;color:var(--text2);margin-top:3px}
+.term-divider{height:1px;background:var(--border);margin:8px 0}
+.term-note{font-size:10px;font-style:italic}
+.term-note.green{color:var(--green)}
+.term-note.navy{color:var(--navy)}
+.term-note.amber{color:var(--amber)}
+
+.platform-card{background:var(--navy);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.platform-label{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.platform-price{font-size:32px;font-weight:700;color:var(--white);line-height:1.1}
+.platform-sub{font-size:11px;color:#9BAFD4;margin-top:5px;margin-bottom:10px}
+.platform-div{height:1px;background:#3B5DA8;margin:10px 0}
+.platform-text{font-size:11px;color:#C0D0F0;font-style:italic;line-height:1.5;margin-bottom:6px}
+.platform-hedge{font-size:11px;color:#9BAFD4;line-height:1.5}
+
+.hr-col{display:flex;flex-direction:column;gap:14px}
+.hr-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid}
+.hr-title.green{color:var(--green);border-color:var(--green)}
+.hr-title.red{color:var(--red);border-color:var(--red)}
+.hr-item{font-size:12px;color:var(--dgray);padding:4px 0 4px 14px;position:relative;line-height:1.5}
+.hr-item::before{content:"•";position:absolute;left:0}
+.hr-item.g::before{color:var(--green)}
+.hr-item.r::before{color:var(--red)}
+
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem}
+
+/* Revenue bridge section */
+.controls-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 2rem}
+.ctrl{display:flex;flex-direction:column;gap:5px}
+.ctrl-top{display:flex;justify-content:space-between;font-size:12px;color:var(--text2)}
+.ctrl-top span{font-weight:600;color:var(--text)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(0,0,0,.15);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--navy);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ctrl-hint{font-size:10px;color:var(--text3);margin-top:2px}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
+.metric{background:var(--surface2);border-radius:var(--radius);padding:10px 12px;border:0.5px solid var(--border)}
+.metric-val{font-size:19px;font-weight:700}
+.metric-val.blue{color:var(--blue)}
+.metric-val.green{color:var(--green)}
+.metric-val.amber{color:var(--amber)}
+.metric-val.navy{color:var(--navy)}
+.metric-lbl{font-size:10px;color:var(--text2);margin-top:3px;line-height:1.4}
+
+.legend{display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+.leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+.bar-section{margin-bottom:1.25rem}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-yr{font-size:12px;color:var(--text2);width:40px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:26px;background:var(--surface2);border-radius:4px;overflow:hidden;display:flex}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;padding:0 4px}
+.seg-gp{background:#185FA5}
+.seg-cert{background:#854F0B}
+.seg-paf{background:#3B6D11}
+.bar-amt{font-size:12px;font-weight:600;color:var(--text);width:62px;text-align:right;flex-shrink:0}
+
+.table-wrap{overflow-x:auto;margin-bottom:1.25rem}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:7px 10px;text-align:right;font-weight:600;color:var(--text2);border-bottom:0.5px solid var(--border);font-size:11px;white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:7px 10px;text-align:right;border-bottom:0.5px solid var(--border);color:var(--text)}
+td:first-child{text-align:left;color:var(--text2);font-weight:500}
+tr.total-row td{font-weight:600;border-top:1.5px solid rgba(0,0,0,.15);border-bottom:none;color:var(--text)}
+tr.gp-row td{color:var(--blue);font-weight:500}
+tr.paf-row td{color:var(--green);font-weight:500}
+tr.cert-row td{color:var(--amber);font-weight:500}
+
+.note-box{background:var(--surface2);border-left:3px solid var(--border);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6}
+.note-box strong{color:var(--text);font-weight:600}
+
+.footer{margin-top:2rem;padding-top:1rem;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.footer-note{font-size:10px;color:var(--text3)}
+
+@media(max-width:620px){
+  .tier-grid,.ref-strip,.controls-grid,.metrics-grid{grid-template-columns:1fr 1fr}
+  .bottom-grid,.term-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">Pondera Leadership Consulting</div>
+    <div class="badge">Alliance · Tiered Wholesale · Confidential</div>
+  </div>
+  <h1>Alliance channel — tiered wholesale model</h1>
+  <p class="subtitle">Volume thresholds unlock lower wholesale prices · partners keep spread to $900 MSRP · Pondera margin compresses, GP grows with volume</p>
+  <hr class="gold-rule">
+</div>
+
+<!-- ── REFERENCE ANCHORS ── -->
+<div class="slabel">Reference anchors</div>
+<div class="ref-strip">
+  <div class="ref-card"><div class="ref-val">$900</div><div class="ref-lbl">MSRP / direct PVA rate</div></div>
+  <div class="ref-card"><div class="ref-val">~$225</div><div class="ref-lbl">Est. cost of sales / assessment</div></div>
+  <div class="ref-card"><div class="ref-val">$5,000</div><div class="ref-lbl">PVA Practitioner Certification (one-time)</div></div>
+</div>
+
+<!-- ── TIER STRUCTURE ── -->
+<div class="slabel">Wholesale tier structure</div>
+<div class="tier-grid">
+  <div class="tier-card t1">
+    <div class="tier-accent"></div>
+    <div class="tier-body">
+      <div class="tier-name">Tier 1 — Entry</div>
+      <div class="tier-vol">1–144 assessments / yr</div>
+      <div class="tier-price">$500</div>
+      <div class="tier-price-lbl">wholesale / assessment</div>
+      <div class="tier-divider"></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Gross margin</span><span class="tier-stat-val gm">55%</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">GP / assessment</span><span class="tier-stat-val gp">$275</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Partner keeps</span><span class="tier-stat-val">$400 spread</span></div>
+    </div>
+  </div>
+  <div class="tier-card t2">
+    <div class="tier-accent"></div>
+    <div class="tier-body">
+      <div class="tier-name">Tier 2 — Growth</div>
+      <div class="tier-vol">145–360 assessments / yr</div>
+      <div class="tier-price">$450</div>
+      <div class="tier-price-lbl">wholesale / assessment</div>
+      <div class="tier-divider"></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Gross margin</span><span class="tier-stat-val gm">50%</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">GP / assessment</span><span class="tier-stat-val gp">$225</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Partner keeps</span><span class="tier-stat-val">$450 spread</span></div>
+    </div>
+  </div>
+  <div class="tier-card t3">
+    <div class="tier-accent"></div>
+    <div class="tier-body">
+      <div class="tier-name">Tier 3 — Scale</div>
+      <div class="tier-vol">361+ assessments / yr</div>
+      <div class="tier-price">$400</div>
+      <div class="tier-price-lbl">wholesale / assessment</div>
+      <div class="tier-divider"></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Gross margin</span><span class="tier-stat-val gm">44%</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">GP / assessment</span><span class="tier-stat-val gp">$175</span></div>
+      <div class="tier-stat"><span class="tier-stat-lbl">Partner keeps</span><span class="tier-stat-val">$500 spread</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── KEY TERMS ── -->
+<div class="slabel">Key partner terms</div>
+<div class="term-grid">
+  <div class="term-card">
+    <div class="term-accent"></div>
+    <div class="term-body">
+      <div class="term-label">PVA Practitioner Certification</div>
+      <div class="term-val">$5,000</div>
+      <div class="term-sub">One-time · per partner onboarding</div>
+      <div class="term-divider"></div>
+      <div class="term-note navy">Qualifies partner to administer and debrief PVA assessments. One client engagement recoups the full fee at any tier.</div>
+    </div>
+  </div>
+  <div class="term-card">
+    <div class="term-accent"></div>
+    <div class="term-body">
+      <div class="term-label">Platform Access Fee</div>
+      <div class="term-val sm">$1,095 / yr</div>
+      <div class="term-sub">Year 2 onwards · all tiers</div>
+      <div class="term-divider"></div>
+      <div class="term-note navy">Includes invitations to ongoing PVA training and education sessions. Partners holding dormant inventory pay carrying cost — the natural activity forcing function.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PLATFORM CARD + HIGHLIGHTS/RISKS ── -->
+<div class="bottom-grid">
+  <div class="hr-col">
+    <div>
+      <div class="hr-title green">Highlights</div>
+      <div class="hr-item g">Partners earn a larger spread at higher tiers ($400→$500) — volume incentive is self-reinforcing</div>
+      <div class="hr-item g">$1,095 platform fee creates natural holding cost on dormant inventory — no contractual policing needed</div>
+      <div class="hr-item g">Uncapped upside — partners can sell above $900 MSRP in premium markets</div>
+      <div class="hr-item g">Partners keep 100% of consulting fees — PVA differentiates their practice, Pondera earns on assessments</div>
+    </div>
+  </div>
+  <div class="hr-col">
+    <div>
+      <div class="hr-title red">Risks</div>
+      <div class="hr-item r">Tier thresholds must measure assessments <em>delivered to clients</em>, not purchased — prevents stockpiling</div>
+      <div class="hr-item r">Set contractual MSRP floor — partners must not sell below $900 to end clients</div>
+      <div class="hr-item r">Define ICP separation: direct vs. alliance clients before launch</div>
+      <div class="hr-item r">Certification ($5K) recoverable in one engagement but may slow sign-up — consider waiving for first cohort</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ── REVENUE BRIDGE ── -->
+<h2>Alliance revenue bridge — 5-year GP model</h2>
+<p class="subtitle" style="margin-bottom:1.25rem">Starting from 1 alliance partner · 5 partners in Year 1 · 15% annual partner growth · adjust inputs below</p>
+
+<div class="slabel">Model inputs</div>
+<div class="controls-card">
+  <div class="controls-grid">
+    <div class="ctrl">
+      <div class="ctrl-top">Year 1 partners <span id="lbl-p">5</span></div>
+      <input type="range" min="1" max="10" step="1" value="5" id="sl-p" oninput="recalc()">
+      <div class="ctrl-hint">Target partner count at launch.</div>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-top">Annual partner growth <span id="lbl-g">15%</span></div>
+      <input type="range" min="5" max="40" step="5" value="15" id="sl-g" oninput="recalc()">
+      <div class="ctrl-hint">Net new partners added each year as % of prior year base.</div>
+    </div>
+    <div class="ctrl">
+      <div class="ctrl-top">Assessments / partner / yr <span id="lbl-a">144</span></div>
+      <input type="range" min="36" max="504" step="36" value="144" id="sl-a" oninput="recalc()">
+      <div class="ctrl-hint">Drives tier placement and GP per assessment.</div>
+    </div>
+  </div>
+</div>
+
+<div class="slabel">Five-year summary</div>
+<div class="metrics-grid">
+  <div class="metric"><div class="metric-val blue" id="m-y5rev">—</div><div class="metric-lbl">Year 5 wholesale revenue (gross)</div></div>
+  <div class="metric"><div class="metric-val green" id="m-y5gp">—</div><div class="metric-lbl">Year 5 assessment GP</div></div>
+  <div class="metric"><div class="metric-val" id="m-y5p">—</div><div class="metric-lbl">Year 5 partner count</div></div>
+  <div class="metric"><div class="metric-val amber" id="m-5yr">—</div><div class="metric-lbl">5-year cumulative total GP</div></div>
+</div>
+
+<div class="slabel">Annual GP bridge — assessment spread + certification + platform access fees</div>
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#185FA5"></div>Assessment GP (wholesale margin)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#854F0B"></div>PVA Practitioner Certification ($5,000 · new partners only)</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#3B6D11"></div>Platform access fee ($1,095/yr · Year 2+)</div>
+</div>
+<div class="bar-section" id="bars"></div>
+
+<div class="slabel">Detailed year-by-year model</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left">Metric</th>
+        <th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="note-box" id="note-box"></div>
+
+<div class="footer">
+  <div class="footer-note">Pondera Advisors · Alliance Tiered Wholesale · Confidential · April 2026</div>
+  <div class="footer-note">T1 $500 (1–144) · T2 $450 (145–360) · T3 $400 (361+) · COGS ~$225 · Cert $5K · Platform fee $1,095/yr (Yr 2+)</div>
+</div>
+
+</div>
+
+<script>
+const COGS=225,PRICES=[500,450,400],CERT=5000,PAF=1095,MSRP=900;
+function tierIdx(a){return a<=144?0:a<=360?1:2;}
+function fmtK(n){
+  if(n>=1000000)return '$'+(n/1000000).toFixed(2)+'M';
+  if(n>=1000)return '$'+Math.round(n/1000)+'K';
+  return '$'+Math.round(n);
+}
+function fmtM(n){return n>=1000000?'$'+(n/1000000).toFixed(2)+'M':'$'+Math.round(n/1000)+'K';}
+function pct(n){return Math.round(n)+'%';}
+
+function recalc(){
+  const p0=parseInt(document.getElementById('sl-p').value);
+  const g=parseInt(document.getElementById('sl-g').value)/100;
+  const apy=parseInt(document.getElementById('sl-a').value);
+  document.getElementById('lbl-p').textContent=p0;
+  document.getElementById('lbl-g').textContent=Math.round(g*100)+'%';
+  document.getElementById('lbl-a').textContent=apy;
+
+  const years=[];
+  let prevPartners=0;
+  for(let y=1;y<=5;y++){
+    const partners=y===1?p0:Math.round(years[y-2].partners*(1+g));
+    const newPartners=partners-prevPartners;
+    const t=tierIdx(apy);
+    const price=PRICES[t];
+    const gpPer=price-COGS;
+    const assessGP=gpPer*apy*partners;
+    const certRev=newPartners*CERT;
+    const pafRev=y===1?0:prevPartners*PAF;
+    const totalGP=assessGP+certRev+pafRev;
+    const wholesaleRev=price*apy*partners;
+    years.push({y,partners,newPartners,price,gpPer,assessGP,certRev,pafRev,totalGP,wholesaleRev,gmPct:Math.round(gpPer/price*100)});
+    prevPartners=partners;
+  }
+
+  const y5=years[4];
+  const cum=years.reduce((s,yr)=>s+yr.totalGP,0);
+  document.getElementById('m-y5rev').textContent=fmtM(y5.wholesaleRev);
+  document.getElementById('m-y5gp').textContent=fmtM(y5.assessGP);
+  document.getElementById('m-y5p').textContent=y5.partners+' partners';
+  document.getElementById('m-5yr').textContent=fmtM(cum);
+
+  const maxGP=Math.max(...years.map(yr=>yr.totalGP));
+  const barsEl=document.getElementById('bars');
+  barsEl.innerHTML='';
+  years.forEach(yr=>{
+    const gpW=Math.max(0,Math.round(yr.assessGP/maxGP*100));
+    const certW=Math.max(0,Math.round(yr.certRev/maxGP*100));
+    const pafW=Math.max(0,Math.round(yr.pafRev/maxGP*100));
+    const row=document.createElement('div');
+    row.className='bar-row';
+    row.innerHTML=`
+      <div class="bar-yr">Yr ${yr.y}</div>
+      <div class="bar-track">
+        <div class="seg seg-gp" style="width:${gpW}%">${gpW>14?fmtK(yr.assessGP):''}</div>
+        <div class="seg seg-cert" style="width:${certW}%">${certW>9?fmtK(yr.certRev):''}</div>
+        <div class="seg seg-paf" style="width:${pafW}%">${pafW>9?fmtK(yr.pafRev):''}</div>
+      </div>
+      <div class="bar-amt">${fmtK(yr.totalGP)}</div>`;
+    barsEl.appendChild(row);
+  });
+
+  const tierNames=['Tier 1 ($500 wholesale — 1–144 assessments)','Tier 2 ($450 wholesale — 145–360 assessments)','Tier 3 ($400 wholesale — 361+ assessments)'];
+  const t=tierIdx(apy);
+  const rows=[
+    {label:'Partners (total)',     vals:years.map(yr=>yr.partners), cls:''},
+    {label:'Net new partners',     vals:years.map(yr=>yr.newPartners), cls:''},
+    {label:'Assessments / partner',vals:years.map(()=>apy), cls:''},
+    {label:'Wholesale tier',       vals:years.map(()=>['T1 — $500','T2 — $450','T3 — $400'][t]), cls:''},
+    {label:'Gross margin',         vals:years.map(yr=>pct(yr.gmPct)), cls:''},
+    {label:'Assessment GP',        vals:years.map(yr=>fmtK(yr.assessGP)), cls:'gp-row'},
+    {label:'Certification revenue',vals:years.map(yr=>fmtK(yr.certRev)), cls:'cert-row'},
+    {label:'Platform access fees', vals:years.map(yr=>fmtK(yr.pafRev)), cls:'paf-row'},
+    {label:'Total alliance GP',    vals:years.map(yr=>fmtK(yr.totalGP)), cls:'total-row'},
+  ];
+  const tbody=document.getElementById('tbody');
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    if(r.cls)tr.className=r.cls;
+    tr.innerHTML=`<td>${r.label}</td>`+r.vals.map(v=>`<td>${v}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('note-box').innerHTML=
+    `<strong>Reading this model:</strong> Partners enter at ${tierNames[t]}. `+
+    `Certification ($${CERT.toLocaleString()}) applies only to <em>net new</em> partners each year. `+
+    `Platform access fees ($${PAF.toLocaleString()}/yr) begin in Year 2 for all prior-year partners. `+
+    `At ${Math.round(g*100)}% annual growth from ${p0} partners, the alliance channel reaches <strong>${y5.partners} partners by Year 5</strong> `+
+    `generating <strong>${fmtM(cum)} cumulative GP</strong> — additive to Pondera's core subscription and BDO channel revenues.`;
+}
+recalc();
+</script>
+</body>
+</html>
